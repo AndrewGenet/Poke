@@ -16,38 +16,102 @@ namespace dynamicMap
         {
             InitializeComponent();
             fillmap();
+            liveDash.Text = "Map Details";
+            profile.Text = "Profile";
+
+            // add pages to tab control
+            myTab.Controls.Add(liveDash);
+            myTab.Controls.Add(profile);
+
+            profile.Controls.Add(gymCount);
 
             //this is for testing purposes
-            toggle.Show();
-            toggle.Controls.Add(gymCount);
+            //toggle.Show();
+            //toggle.Controls.Add(gymCount);
             //listBox1.Items.Add(myBiome.BackColor.ToString());
         }
 
         //form 2 stuff WORK IN PROGRESS - disreguard for now
         Form toggle = new Form();
-        bool[] badges = new bool[8];
+        bool[] badges = new bool[88];
         int badgeCount = 0;
         bool winner = false;
         Label gymCount = new Label();
+        bool overworld = true;
+        TabControl myTab = new TabControl();
+        TabPage liveDash = new TabPage();
+        TabPage profile = new TabPage();
 
         private void gymThings()
         {
+            // clear the dash controls
+            liveDash.Controls.Clear();
+            Button enter = new Button();
+            enter.Dock = DockStyle.Bottom;
+            enter.Height = sizeVar * 2;
+
             if (mySq[whereImAt].Name == "city")
             {
                 if (badges[badgeCount] != true)
                 {
                     //initiate gym battle
-                    winner = true;
-
-
-                    if (winner == true)
+                    enter.Text = "Enter Battle!";
+                    liveDash.Controls.Add(enter);
+                    enter.Click += (s, e) =>
                     {
-                        badges[badgeCount] = true;
-                        badgeCount = badgeCount + 1;
-                        gymCount.Text = badgeCount.ToString();
-                        winner = false;
-                    }
+                        enterBattle();
+                    };
                 }
+                else
+                {
+                    enter.Text = "You've already won this battle!";
+                    enter.Enabled = false;
+                }
+                
+            }
+        }
+
+        private void enterBattle()
+        {
+            // clear the dash controls
+            liveDash.Controls.Clear();
+
+            // hide map
+            for (int i = 0; i < num; i++)
+            {
+                mySq[i].Visible = false;
+            }
+
+            //disable keys
+            overworld = false;
+
+            Button myBtn = new Button();
+            myBtn.Text = "Click to win this battle!";
+            myBtn.Dock = DockStyle.Fill;
+            Controls.Add(myBtn);
+            myBtn.Click += (s, e) =>
+            {
+                // reshow map
+                for (int i = 0; i < num; i++)
+                {
+                    mySq[i].Visible = true;
+                }
+                //enable keys
+                overworld = true;
+                winner = true;
+                checkForWinner();
+            };
+
+        }
+
+        private void checkForWinner()
+        {
+            if (winner == true)
+            {
+                badges[badgeCount] = true;
+                badgeCount = badgeCount + 1;
+                gymCount.Text = "Badges" + badgeCount.ToString();
+                winner = false;
             }
         }
         // disreguard ^^
@@ -66,7 +130,7 @@ namespace dynamicMap
         int y = 0;
 
         // size of each of the squares in pixels
-        int sizeVar = 50;
+        int sizeVar = 25;
         
         // variable controls for loops when making the map
         // side note: i made these as globals so that i could mess around with size and not have to dig through code
@@ -80,6 +144,8 @@ namespace dynamicMap
 
         private void fillmap()
         {
+            
+
             //load the image (for background)
             Bitmap bmp = new Bitmap(pictureBox1.Image);
 
@@ -90,7 +156,7 @@ namespace dynamicMap
                 PictureBox myBiome = new PictureBox();
 
                 //grab & set the color from my image
-                Color gotColor = bmp.GetPixel(x, y);
+                Color gotColor = bmp.GetPixel(x + 5, y + 5);
                 gotColor = Color.FromArgb(gotColor.R, gotColor.G, gotColor.B);
                 
                 //set the control backcolor to the color we got
@@ -148,6 +214,14 @@ namespace dynamicMap
             mySq[whereImAt].ImageLocation = avatar;
             mySq[whereImAt].SizeMode = PictureBoxSizeMode.Zoom;
 
+            // adding a dashboard for statistics, badges, dex...
+            
+            myTab.Location = new Point(numOfCols * sizeVar, 0);
+            myTab.Height = y;
+            myTab.Width = (y / 3)*2;
+            Controls.Add(myTab);
+
+
             //size of the form
             this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -156,70 +230,75 @@ namespace dynamicMap
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Up)
+            if (overworld == true)
             {
-                // ONLY IMPLEMENTED HERE: if where im at is LESS than the number of coloums, dont move.
-                // otherwise we will get an out of bounds exception when trying to go UP (used for the top of the map bounds)
-                if (whereImAt < numOfCols)
+                if (keyData == Keys.Up)
+                {
+                    // ONLY IMPLEMENTED HERE: if where im at is LESS than the number of coloums, dont move.
+                    // otherwise we will get an out of bounds exception when trying to go UP (used for the top of the map bounds)
+                    if (whereImAt < numOfCols)
+                        return true;
+
+                    // if the square im going to is not equal to no, then its pathable, and execute my code.
+                    if (mySq[whereImAt - numOfCols].Name != "no")
+                    {
+                        // move avatar to new location
+                        mySq[whereImAt - numOfCols].ImageLocation = mySq[whereImAt].ImageLocation;
+                        mySq[whereImAt - numOfCols].SizeMode = PictureBoxSizeMode.Zoom;
+
+                        // remove avatar from old location
+                        mySq[whereImAt].ImageLocation = "";
+
+                        // set the new position
+                        whereImAt = whereImAt - numOfCols;
+                    }
+                    gymThings();
                     return true;
-
-                // if the square im going to is not equal to no, then its pathable, and execute my code.
-                if (mySq[whereImAt - numOfCols].Name != "no")
-                {
-                    // move avatar to new location
-                    mySq[whereImAt - numOfCols].ImageLocation = mySq[whereImAt].ImageLocation;
-                    mySq[whereImAt - numOfCols].SizeMode = PictureBoxSizeMode.Zoom;
-
-                    // remove avatar from old location
-                    mySq[whereImAt].ImageLocation = "";
-
-                    // set the new position
-                    whereImAt = whereImAt - numOfCols;
                 }
-                //gymThings();
-                return true;
-            }
 
-            if(keyData == Keys.Down)
-            {
-                //easy
-                if (mySq[whereImAt + numOfCols].Name != "no")
+                if (keyData == Keys.Down)
                 {
-                    mySq[whereImAt + numOfCols].ImageLocation = mySq[whereImAt].ImageLocation;
-                    mySq[whereImAt + numOfCols].SizeMode = PictureBoxSizeMode.Zoom;
-                    mySq[whereImAt].ImageLocation = "";
-                    whereImAt = whereImAt + numOfCols;
+                    //easy
+                    if (mySq[whereImAt + numOfCols].Name != "no")
+                    {
+                        mySq[whereImAt + numOfCols].ImageLocation = mySq[whereImAt].ImageLocation;
+                        mySq[whereImAt + numOfCols].SizeMode = PictureBoxSizeMode.Zoom;
+                        mySq[whereImAt].ImageLocation = "";
+                        whereImAt = whereImAt + numOfCols;
+                    }
+                    gymThings();
+                    return true;
                 }
-                //gymThings();
-                return true;
-            }
 
-            if (keyData == Keys.Left)
-            {
-                //peasy
-                if (mySq[whereImAt - 1].Name != "no")
+                if (keyData == Keys.Left)
                 {
-                    mySq[whereImAt - 1].ImageLocation = mySq[whereImAt].ImageLocation;
-                    mySq[whereImAt - 1].SizeMode = PictureBoxSizeMode.Zoom;
-                    mySq[whereImAt].ImageLocation = "";
-                    whereImAt = whereImAt - 1;
+                    //peasy
+                    if (mySq[whereImAt - 1].Name != "no")
+                    {
+                        mySq[whereImAt - 1].ImageLocation = mySq[whereImAt].ImageLocation;
+                        mySq[whereImAt - 1].SizeMode = PictureBoxSizeMode.Zoom;
+                        mySq[whereImAt].ImageLocation = "";
+                        whereImAt = whereImAt - 1;
+                    }
+                    gymThings();
+                    return true;
                 }
-                //gymThings();
-                return true;
-            }
 
-            if(keyData == Keys.Right)
-            {
-                //lemon
-                if (mySq[whereImAt + 1].Name != "no")
+                if (keyData == Keys.Right)
                 {
-                    mySq[whereImAt + 1].ImageLocation = mySq[whereImAt].ImageLocation;
-                    mySq[whereImAt + 1].SizeMode = PictureBoxSizeMode.Zoom;
-                    mySq[whereImAt].ImageLocation = "";
-                    whereImAt = whereImAt + 1;
+                    //lemon
+                    if (mySq[whereImAt + 1].Name != "no")
+                    {
+                        mySq[whereImAt + 1].ImageLocation = mySq[whereImAt].ImageLocation;
+                        mySq[whereImAt + 1].SizeMode = PictureBoxSizeMode.Zoom;
+                        mySq[whereImAt].ImageLocation = "";
+                        whereImAt = whereImAt + 1;
+                    }
+                    gymThings();
+                    return true;
                 }
-                //gymThings();
-                return true;
+
+                
             }
 
             //squeezy
