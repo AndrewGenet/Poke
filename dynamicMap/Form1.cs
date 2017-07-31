@@ -16,6 +16,11 @@ namespace dynamicMap
         {
             InitializeComponent();
             fillmap();
+            loadThings();
+        }
+
+        private void loadThings()
+        {
             liveDash.Text = "Map Details";
             profile.Text = "Profile";
 
@@ -25,10 +30,31 @@ namespace dynamicMap
 
             profile.Controls.Add(gymCount);
 
-            //this is for testing purposes
-            //toggle.Show();
-            //toggle.Controls.Add(gymCount);
-            //listBox1.Items.Add(myBiome.BackColor.ToString());
+            liveDash.Controls.Add(eventName);
+            liveDash.Controls.Add(enterEvent);
+            liveDash.Controls.Add(firstPosMon);
+            liveDash.Controls.Add(SecPosMon);
+            liveDash.Controls.Add(thirdPosMon);
+
+            firstPosMon.Width = sizeVar * 2;
+            SecPosMon.Width = sizeVar * 2;
+            thirdPosMon.Width = sizeVar * 2;
+            firstPosMon.Height = sizeVar * 2;
+            SecPosMon.Height = sizeVar * 2;
+            thirdPosMon.Height = sizeVar * 2;
+            firstPosMon.Location = new Point(0, 50);
+            SecPosMon.Location = new Point(50, 50);
+            thirdPosMon.Location = new Point(50, 50);
+            firstPosMon.SizeMode = PictureBoxSizeMode.Zoom;
+            SecPosMon.SizeMode = PictureBoxSizeMode.Zoom;
+            thirdPosMon.SizeMode = PictureBoxSizeMode.Zoom;
+
+            firstPosMon.ImageLocation = avatar;
+            SecPosMon.ImageLocation = avatar;
+            thirdPosMon.ImageLocation = avatar;
+
+            enterEvent.Dock = DockStyle.Bottom;
+            enterEvent.Height = sizeVar * 2;
         }
 
         //form 2 stuff WORK IN PROGRESS - disreguard for now
@@ -38,9 +64,11 @@ namespace dynamicMap
         bool winner = false;
         Label gymCount = new Label();
         bool overworld = true;
-        TabControl myTab = new TabControl();
-        TabPage liveDash = new TabPage();
-        TabPage profile = new TabPage();
+
+
+        //TabControl myTab = new TabControl();
+        //TabPage liveDash = new TabPage();
+        //TabPage profile = new TabPage();
 
         private void gymThings()
         {
@@ -73,6 +101,7 @@ namespace dynamicMap
 
         private void enterBattle()
         {
+            myTab.Visible = false;
             // clear the dash controls
             liveDash.Controls.Clear();
 
@@ -91,6 +120,7 @@ namespace dynamicMap
             Controls.Add(myBtn);
             myBtn.Click += (s, e) =>
             {
+                myTab.Visible = true;
                 // reshow map
                 for (int i = 0; i < num; i++)
                 {
@@ -117,6 +147,81 @@ namespace dynamicMap
         // disreguard ^^
 
 
+
+        bool[] isEvent = new bool[340];
+
+        TabControl myTab = new TabControl();
+        TabPage liveDash = new TabPage();
+        TabPage profile = new TabPage();
+        Button enterEvent = new Button();
+        Label eventName = new Label();
+        PictureBox firstPosMon = new PictureBox();
+        PictureBox SecPosMon = new PictureBox();
+        PictureBox thirdPosMon = new PictureBox();
+
+        // check for event
+        private void eventLogic()
+        {
+            enterEvent.Visible = false;
+            enterEvent.Enabled = false;
+            eventName.Visible = false;
+            // is this an event?
+            if (isEvent[whereImAt] == true)
+            {
+                // what type of event is it
+                eventType();
+            }
+            else
+            {
+                // do nothing
+            }
+        }
+
+        private void eventType()
+        {
+            dashboardItems();
+            if (mySq[whereImAt].Name == "city")
+            {
+                cityEvent();
+            }
+            else if (mySq[whereImAt].Name == "route")
+            {
+                routeEvent();
+            }
+        }
+
+        private void dashboardItems()
+        {
+            eventName.Text = mySq[whereImAt].Name;
+            eventName.Visible = true;
+            enterEvent.Visible = true;
+            enterEvent.Enabled = true;
+            enterEvent.Text = "Enter " + eventName.Text + " battle!";
+        }
+
+        private void cityEvent()
+        {
+            firstPosMon.ImageLocation = avatar;
+            SecPosMon.ImageLocation = avatar;
+            thirdPosMon.ImageLocation = avatar;
+            enterEvent.Click += (s, e) =>
+            {
+                //
+            };
+        }
+
+        private void routeEvent()
+        {
+            firstPosMon.ImageLocation = avatar;
+            SecPosMon.ImageLocation = avatar;
+            thirdPosMon.ImageLocation = avatar;
+            enterEvent.Click += (s, e) =>
+            {
+                //
+            };
+        }
+
+        
         
 
         
@@ -177,11 +282,13 @@ namespace dynamicMap
                 {
                     //grey
                     myBiome.Name = "city";
+                    isEvent[i] = true;
                 }
                 else if (myBiome.BackColor ==Color.FromArgb(255,255,255))
                 {
                     //white
                     myBiome.Name = "route";
+                    isEvent[i] = true;
                 }
                 else
                 {
@@ -224,7 +331,8 @@ namespace dynamicMap
 
             //size of the form
             this.AutoSize = true;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            
         }
         
 
@@ -252,7 +360,7 @@ namespace dynamicMap
                         // set the new position
                         whereImAt = whereImAt - numOfCols;
                     }
-                    gymThings();
+                    eventLogic();
                     return true;
                 }
 
@@ -266,7 +374,7 @@ namespace dynamicMap
                         mySq[whereImAt].ImageLocation = "";
                         whereImAt = whereImAt + numOfCols;
                     }
-                    gymThings();
+                    eventLogic();
                     return true;
                 }
 
@@ -280,7 +388,7 @@ namespace dynamicMap
                         mySq[whereImAt].ImageLocation = "";
                         whereImAt = whereImAt - 1;
                     }
-                    gymThings();
+                    eventLogic();
                     return true;
                 }
 
@@ -294,7 +402,7 @@ namespace dynamicMap
                         mySq[whereImAt].ImageLocation = "";
                         whereImAt = whereImAt + 1;
                     }
-                    gymThings();
+                    eventLogic();
                     return true;
                 }
 
