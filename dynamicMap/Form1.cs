@@ -27,42 +27,102 @@ namespace dynamicMap
             // add pages to tab control
             myTab.Controls.Add(liveDash);
             myTab.Controls.Add(profile);
+            
 
-            profile.Controls.Add(gymCount);
+            firstPosMon.ImageLocation = "https://cdn.bulbagarden.net/upload/a/a3/Spr_1b_001.png";
+            SecPosMon.ImageLocation = "https://cdn.bulbagarden.net/upload/9/9d/Spr_1b_004.png";
+            thirdPosMon.ImageLocation = "https://cdn.bulbagarden.net/upload/3/30/Spr_1b_007.png";
+            opponent.ImageLocation = "https://cdn.bulbagarden.net/upload/thumb/3/30/FireRed_LeafGreen_Professor_Oak.png/180px-FireRed_LeafGreen_Professor_Oak.png";
 
-            liveDash.Controls.Add(eventName);
-            liveDash.Controls.Add(enterEvent);
-            liveDash.Controls.Add(firstPosMon);
-            liveDash.Controls.Add(SecPosMon);
-            liveDash.Controls.Add(thirdPosMon);
+            eventName.Text = "Pallet Town";
+            eventName.Font = new Font("", 16.0f);
+            leaderName.Text = "Professor Oak";
+            type.Text = "Type...";
+            quote.Text = "Hey! Wait! Don't go out! It's unsafe! Wild Pokémon live in tall grass! You need your own Pokémon for your protection. I know! Here, come with me!";
+            quote.AutoSize = true;
+            enterEvent.Text = "Follow Professor Oak!";
+            opponent.BackColor = Color.White;
+            firstPosMon.BackColor = Color.White;
+            SecPosMon.BackColor = Color.White;
+            thirdPosMon.BackColor = Color.White;
 
-            firstPosMon.Width = sizeVar * 2;
-            SecPosMon.Width = sizeVar * 2;
-            thirdPosMon.Width = sizeVar * 2;
-            firstPosMon.Height = sizeVar * 2;
-            SecPosMon.Height = sizeVar * 2;
-            thirdPosMon.Height = sizeVar * 2;
-            firstPosMon.Location = new Point(0, 50);
-            SecPosMon.Location = new Point(50, 50);
-            thirdPosMon.Location = new Point(50, 50);
-            firstPosMon.SizeMode = PictureBoxSizeMode.Zoom;
-            SecPosMon.SizeMode = PictureBoxSizeMode.Zoom;
-            thirdPosMon.SizeMode = PictureBoxSizeMode.Zoom;
+            //ground.RowCount = 3;
+            //ground.ColumnCount = 1;
+            //inner.RowCount = 2;
+            //inner.ColumnCount = 2;
+            //right.RowCount = 3;
+            //right.ColumnCount = 1;
+            //pictures.RowCount = 1;
+            //pictures.ColumnCount = 4;
 
-            firstPosMon.ImageLocation = avatar;
-            SecPosMon.ImageLocation = avatar;
-            thirdPosMon.ImageLocation = avatar;
+            ground.Dock = DockStyle.Fill;
+            inner.Dock = DockStyle.Fill;
+            right.Dock = DockStyle.Fill;
+            pictures.Dock = DockStyle.Fill;
+            eventName.Dock = DockStyle.Bottom;
+            leaderName.Dock = DockStyle.Fill;
+            type.Dock = DockStyle.Fill;
+            enterEvent.Dock = DockStyle.Fill;
+            opponent.Dock = DockStyle.Fill;
+            quote.Dock = DockStyle.Bottom;
+            firstPosMon.SizeMode = PictureBoxSizeMode.StretchImage;
+            SecPosMon.SizeMode = PictureBoxSizeMode.StretchImage;
+            thirdPosMon.SizeMode = PictureBoxSizeMode.StretchImage;
+            opponent.SizeMode = PictureBoxSizeMode.StretchImage;
 
-            enterEvent.Dock = DockStyle.Bottom;
-            enterEvent.Height = sizeVar * 2;
+            //ground.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            //inner.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            //right.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            //pictures.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+
+            ground.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            ground.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            ground.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            ground.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            ground.BackColor = Color.White;
+
+            inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            inner.RowStyles.Add(new RowStyle(SizeType.Percent, 5f));
+            inner.RowStyles.Add(new RowStyle(SizeType.Percent, 95f));
+
+            right.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            right.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            right.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            right.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+            pictures.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            pictures.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            pictures.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            pictures.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            ground.Controls.Add(eventName, 0, 0);
+            ground.Controls.Add(inner, 0, 1);
+            ground.Controls.Add(enterEvent, 0, 2);
+
+            inner.Controls.Add(leaderName, 0, 0);
+            inner.Controls.Add(opponent, 0, 1);
+            inner.Controls.Add(type, 1, 0);
+            inner.Controls.Add(right, 1, 1);
+            
+            right.Controls.Add(pictures, 0, 0);
+            right.Controls.Add(quote, 0, 2);
+
+            pictures.Controls.Add(firstPosMon, 0, 0);
+            pictures.Controls.Add(SecPosMon, 1, 0);
+            pictures.Controls.Add(thirdPosMon, 2, 0);
+            
+            liveDash.Controls.Add(ground);
+            
+
         }
 
         //form 2 stuff WORK IN PROGRESS - disreguard for now
-        Form toggle = new Form();
-        bool[] badges = new bool[88];
-        int badgeCount = 0;
-        bool winner = false;
-        Label gymCount = new Label();
+        //Form toggle = new Form();
+        //bool[] badges = new bool[88];
+        //int badgeCount = 0;
+        //bool winner = false;
+        //Label gymCount = new Label();
         bool overworld = true;
 
 
@@ -70,82 +130,96 @@ namespace dynamicMap
         //TabPage liveDash = new TabPage();
         //TabPage profile = new TabPage();
 
-        private void gymThings()
-        {
-            // clear the dash controls
-            liveDash.Controls.Clear();
-            Button enter = new Button();
-            enter.Dock = DockStyle.Bottom;
-            enter.Height = sizeVar * 2;
+        //private void gymThings()
+        //{
+        //    // clear the dash controls
+        //    liveDash.Controls.Clear();
+        //    Button enter = new Button();
+        //    enter.Dock = DockStyle.Bottom;
+        //    enter.Height = sizeVar * 2;
 
-            if (mySq[whereImAt].Name == "city")
-            {
-                if (badges[badgeCount] != true)
-                {
-                    //initiate gym battle
-                    enter.Text = "Enter Battle!";
-                    liveDash.Controls.Add(enter);
-                    enter.Click += (s, e) =>
-                    {
-                        enterBattle();
-                    };
-                }
-                else
-                {
-                    enter.Text = "You've already won this battle!";
-                    enter.Enabled = false;
-                }
+        //    if (mySq[whereImAt].Name == "city")
+        //    {
+        //        if (badges[badgeCount] != true)
+        //        {
+        //            //initiate gym battle
+        //            enter.Text = "Enter Battle!";
+        //            liveDash.Controls.Add(enter);
+        //            enter.Click += (s, e) =>
+        //            {
+        //                enterBattle();
+        //            };
+        //        }
+        //        else
+        //        {
+        //            enter.Text = "You've already won this battle!";
+        //            enter.Enabled = false;
+        //        }
                 
-            }
-        }
+        //    }
+        //}
 
-        private void enterBattle()
-        {
-            myTab.Visible = false;
-            // clear the dash controls
-            liveDash.Controls.Clear();
+        //private void enterBattle()
+        //{
+        //    myTab.Visible = false;
+        //    // clear the dash controls
+        //    liveDash.Controls.Clear();
 
-            // hide map
-            for (int i = 0; i < num; i++)
-            {
-                mySq[i].Visible = false;
-            }
+        //    // hide map
+        //    for (int i = 0; i < num; i++)
+        //    {
+        //        mySq[i].Visible = false;
+        //    }
 
-            //disable keys
-            overworld = false;
+        //    //disable keys
+        //    overworld = false;
 
-            Button myBtn = new Button();
-            myBtn.Text = "Click to win this battle!";
-            myBtn.Dock = DockStyle.Fill;
-            Controls.Add(myBtn);
-            myBtn.Click += (s, e) =>
-            {
-                myTab.Visible = true;
-                // reshow map
-                for (int i = 0; i < num; i++)
-                {
-                    mySq[i].Visible = true;
-                }
-                //enable keys
-                overworld = true;
-                winner = true;
-                checkForWinner();
-            };
+        //    Button myBtn = new Button();
+        //    myBtn.Text = "Click to win this battle!";
+        //    myBtn.Dock = DockStyle.Fill;
+        //    Controls.Add(myBtn);
+        //    myBtn.Click += (s, e) =>
+        //    {
+        //        myTab.Visible = true;
+        //        // reshow map
+        //        for (int i = 0; i < num; i++)
+        //        {
+        //            mySq[i].Visible = true;
+        //        }
+        //        //enable keys
+        //        overworld = true;
+        //        winner = true;
+        //        checkForWinner();
+        //    };
 
-        }
+        //}
 
-        private void checkForWinner()
-        {
-            if (winner == true)
-            {
-                badges[badgeCount] = true;
-                badgeCount = badgeCount + 1;
-                gymCount.Text = "Badges" + badgeCount.ToString();
-                winner = false;
-            }
-        }
-        // disreguard ^^
+        //private void checkForWinner()
+        //{
+        //    if (winner == true)
+        //    {
+        //        badges[badgeCount] = true;
+        //        badgeCount = badgeCount + 1;
+        //        gymCount.Text = "Badges" + badgeCount.ToString();
+        //        winner = false;
+        //    }
+        //}
+        //// disreguard ^^
 
+
+        TableLayoutPanel ground = new TableLayoutPanel();
+        TableLayoutPanel inner = new TableLayoutPanel();
+        TableLayoutPanel right = new TableLayoutPanel();
+        TableLayoutPanel pictures = new TableLayoutPanel();
+        Label eventName = new Label();
+        Label leaderName = new Label();
+        Label type = new Label();
+        Label quote = new Label();
+        Button enterEvent = new Button();
+        PictureBox opponent = new PictureBox();
+        PictureBox firstPosMon = new PictureBox();
+        PictureBox SecPosMon = new PictureBox();
+        PictureBox thirdPosMon = new PictureBox();
 
 
         bool[] isEvent = new bool[340];
@@ -153,18 +227,10 @@ namespace dynamicMap
         TabControl myTab = new TabControl();
         TabPage liveDash = new TabPage();
         TabPage profile = new TabPage();
-        Button enterEvent = new Button();
-        Label eventName = new Label();
-        PictureBox firstPosMon = new PictureBox();
-        PictureBox SecPosMon = new PictureBox();
-        PictureBox thirdPosMon = new PictureBox();
 
         // check for event
         private void eventLogic()
         {
-            enterEvent.Visible = false;
-            enterEvent.Enabled = false;
-            eventName.Visible = false;
             // is this an event?
             if (isEvent[whereImAt] == true)
             {
@@ -193,32 +259,30 @@ namespace dynamicMap
         private void dashboardItems()
         {
             eventName.Text = mySq[whereImAt].Name;
-            eventName.Visible = true;
-            enterEvent.Visible = true;
-            enterEvent.Enabled = true;
+            eventName.Enabled = true;
             enterEvent.Text = "Enter " + eventName.Text + " battle!";
         }
 
         private void cityEvent()
         {
-            firstPosMon.ImageLocation = avatar;
-            SecPosMon.ImageLocation = avatar;
-            thirdPosMon.ImageLocation = avatar;
-            enterEvent.Click += (s, e) =>
-            {
-                //
-            };
+            //firstPosMon.ImageLocation = avatar;
+            //SecPosMon.ImageLocation = avatar;
+            //thirdPosMon.ImageLocation = avatar;
+            //enterEvent.Click += (s, e) =>
+            //{
+            //    //
+            //};
         }
 
         private void routeEvent()
         {
-            firstPosMon.ImageLocation = avatar;
-            SecPosMon.ImageLocation = avatar;
-            thirdPosMon.ImageLocation = avatar;
-            enterEvent.Click += (s, e) =>
-            {
-                //
-            };
+            //firstPosMon.ImageLocation = avatar;
+            //SecPosMon.ImageLocation = avatar;
+            //thirdPosMon.ImageLocation = avatar;
+            //enterEvent.Click += (s, e) =>
+            //{
+            //    //
+            //};
         }
 
         
